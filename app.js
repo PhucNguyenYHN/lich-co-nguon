@@ -272,6 +272,18 @@
         ' <span class="sub">tháng ' + esc(z.thang) + '</span>');
     }
     hd += '<p class="sub">' + esc(r.canhBao.hoangDao) + '</p>';
+    var gt = '', gx = '';
+    for (var g0 = 0; g0 < r.gioHoangDao.length; g0++) {
+      var g1 = r.gioHoangDao[g0];
+      var chip = '<span class="v ' + (g1.loai === 'hoàng đạo' ? 'v-nen' : 'v-tranh') + '">' + esc(g1.chi) + ' <span class="han">' + esc(g1.khoang) + '</span></span>';
+      if (g1.loai === 'hoàng đạo') gt += chip; else gx += chip;
+    }
+    hd += '<p class="vh">Giờ hoàng đạo hôm nay ' + tag('hoàng đạo') + '</p><div class="vgroup">' + gt + '</div>' +
+      '<p class="vh">Giờ hắc đạo ' + tag('hắc đạo') + '</p><div class="vgroup">' + gx + '</div>';
+    if (hasHour) {
+      var hi = Math.floor((h + 1) / 2) % 12, cur = r.gioHoangDao[hi];
+      hd += '<p class="note">Giờ bạn nhập (' + pad2(h) + ':' + pad2(mi) + ') thuộc giờ <b>' + esc(cur.chi) + '</b>, thần <b>' + esc(cur.than) + '</b>: ' + esc(cur.loai) + '.</p>';
+    }
     hd += '<div class="scroll"><table><thead><tr><th>Giờ</th><th>Khoảng</th><th>Thần</th><th></th></tr></thead><tbody>';
     for (var g = 0; g < r.gioHoangDao.length; g++) {
       var gi = r.gioHoangDao[g];
