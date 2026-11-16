@@ -174,3 +174,43 @@ h1 { color: var(--accent); }
 .vtitle { font-size: 13px; font-weight: 600; color: var(--muted); margin-right: 4px; }
 .vh { margin: 10px 0 2px; font-weight: 600; }
 .note { margin: 8px 0; padding: 8px 10px; border-radius: 8px; background: var(--warn-bg); color: var(--warn-ink); font-size: 14px; }
+
+/* ===== Làm nét: chữ lớn hơn, màu đậm hơn, viền rõ ===== */
+body { font-size: 17px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+h1 { font-size: 26px; font-weight: 800; letter-spacing: -.01em; }
+.card { border-width: 1.5px; box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 6px 18px -10px rgba(0,0,0,.35); }
+.card h3 { font-size: 18px; font-weight: 800; }
+.card-A { border-top: 5px solid var(--a); }
+.card-B { border-top: 5px solid var(--b); }
+.card-C { border-top: 5px solid var(--c); }
+.bac { font-size: 13px; padding: 1px 9px; border-width: 2px; font-weight: 800; }
+.tag { font-size: 14px; padding: 1px 10px; font-weight: 700; }
+.el { font-size: 17px; font-weight: 800; padding: 1px 11px; border-width: 2px; }
+.pill .el { font-size: 20px; }
+.nap { margin-left: 8px; font-size: 15px; color: var(--muted); white-space: nowrap; }
+.nap b { color: var(--ink); }
+.nap .el { font-size: 14px; padding: 0 8px; }
+.v { font-size: 15px; font-weight: 600; border-width: 1.5px; }
+th { font-size: 14px; }
+td, th { padding: 8px 10px; }
+:root {
+  --el-kim: #5a4a00; --el-kim-bg: #f7e48a;
+  --el-moc: #0d5a1f; --el-moc-bg: #a9e2b4;
+  --el-thuy: #0a4a8a; --el-thuy-bg: #a9cff3;
+  --el-hoa: #8f1d0d; --el-hoa-bg: #f6b1a4;
+  --el-tho: #6b3f12; --el-tho-bg: #e8c69a;
+  --s-kim: #e0b800; --s-moc: #2e9a46; --s-thuy: #1f78d0; --s-hoa: #d93a22; --s-tho: #a8692a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --el-kim: #fff0a0; --el-kim-bg: #5a4a00; --el-moc: #bff2c8; --el-moc-bg: #14602a;
+    --el-thuy: #c4e0ff; --el-thuy-bg: #0f4a8a; --el-hoa: #ffd0c6; --el-hoa-bg: #8f2412;
+    --el-tho: #f6dcb8; --el-tho-bg: #6b4218;
+  }
+}
+:root[data-theme="dark"] {
+  --el-kim: #fff0a0; --el-kim-bg: #5a4a00; --el-moc: #bff2c8; --el-moc-bg: #14602a;
+  --el-thuy: #c4e0ff; --el-thuy-bg: #0f4a8a; --el-hoa: #ffd0c6; --el-hoa-bg: #8f2412;
+  --el-tho: #f6dcb8; --el-tho-bg: #6b4218;
+}
+.stripe { height: 8px; }

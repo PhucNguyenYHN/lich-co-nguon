@@ -53,6 +53,10 @@
   function pill(p) {
     return '<span class="pill">' + elChip(BU.CAN[p.stem], BU.STEM_EL[p.stem]) + elChip(BU.CHI[p.branch], BU.BRANCH_EL[p.branch]) + '</span>';
   }
+  function nap(p) {
+    var n = BU.napAm(p.stem, p.branch);
+    return ' <span class="nap">Nạp âm: <b>' + esc(n.ten) + '</b> ' + elChip(n.hanh, n.hanh) + '</span>';
+  }
   function errCard(msg) { return '<div class="card err" role="alert">' + esc(msg) + '</div>'; }
 
   function sourceBlock(items) {
@@ -207,7 +211,7 @@
     var lu = a.lunar;
     var body = '<p><b>' + WEEK[(jdn + 1) % 7] + ', ' + d + '/' + m + '/' + y + '</b></p>' +
       '<p>Âm lịch (múi giờ UTC+7): <b>ngày ' + lu.day + ' tháng ' + lu.month + (lu.leap ? ' nhuận' : '') + ' năm ' + lu.year + '</b></p>' +
-      '<p>Can chi ngày: ' + pill(a.dayPillar) + ' <span class="sub">' + esc(a.dayPillar.name) + '</span></p>';
+      '<p>Can chi ngày: ' + pill(a.dayPillar) + ' <span class="sub">' + esc(a.dayPillar.name) + '</span>' + nap(a.dayPillar) + '</p>';
     if (a.tietToday.length) {
       var t = a.tietToday[0];
       body += '<p>Ngày có giao tiết <b>' + esc(t.name) + '</b> lúc ' + pad2(t.local.hour) + ':' + pad2(t.local.minute) + '. Sai số tính tiết vài phút.</p>';
@@ -222,20 +226,20 @@
         '<div class="sub">Ngày này nằm giữa hai mốc nên hai cách cho kết quả khác nhau. Lập xuân năm ' + y + ' lúc ' +
         pad2(lx.hour) + ':' + pad2(lx.minute) + ' ngày ' + lx.day + '/' + lx.month + '.</div></td></tr>';
     } else {
-      tb += '<tr><th>Năm</th><td>' + pill(yp.byLapXuan) + ' ' + esc(yp.byLapXuan.name) + ' <span class="sub">(hai mốc Lập xuân và Tết trùng nhau)</span></td></tr>';
+      tb += '<tr><th>Năm</th><td>' + pill(yp.byLapXuan) + ' ' + esc(yp.byLapXuan.name) + nap(yp.byLapXuan) + ' <span class="sub">(hai mốc Lập xuân và Tết trùng nhau)</span></td></tr>';
     }
     if (a.tietToday.length) {
       var ab = LC.analyze(d, m, y, 0, 0), aa = LC.analyze(d, m, y, 23, 59);
       tb += '<tr><th>Tháng</th><td>Trước giao tiết: ' + pill(ab.monthPillar) + ' ' + esc(ab.monthPillar.name) + '<br>Sau giao tiết: ' + pill(aa.monthPillar) + ' ' + esc(aa.monthPillar.name) +
         '<div class="sub">Can chi tháng đổi ở thời điểm giao tiết, không phải mùng 1 âm lịch.</div></td></tr>';
     } else {
-      tb += '<tr><th>Tháng</th><td>' + pill(a.monthPillar) + ' ' + esc(a.monthPillar.name) + ' <span class="sub">(tính theo Tiết)</span></td></tr>';
+      tb += '<tr><th>Tháng</th><td>' + pill(a.monthPillar) + ' ' + esc(a.monthPillar.name) + nap(a.monthPillar) + ' <span class="sub">(tính theo Tiết)</span></td></tr>';
     }
     if (hasHour) {
       var hh = '';
       for (var i = 0; i < a.hourPillars.length; i++) {
         var hp = a.hourPillars[i];
-        hh += '<div>' + pill(hp.pillar) + ' ' + esc(hp.pillar.name) + (hp.rule ? ' <span class="sub">(' + esc(hp.rule) + ')</span>' : '') + '</div>';
+        hh += '<div>' + pill(hp.pillar) + ' ' + esc(hp.pillar.name) + nap(hp.pillar) + (hp.rule ? ' <span class="sub">(' + esc(hp.rule) + ')</span>' : '') + '</div>';
       }
       tb += '<tr><th>Giờ</th><td>' + hh + (a.hourPillars.length > 1 ? '<div class="sub">Giờ Tý muộn (23h) có hai cách tính; app hiện cả hai.</div>' : '') + '</td></tr>';
     } else {
