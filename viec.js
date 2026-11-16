@@ -24,7 +24,7 @@
     [['營建宮室', '營建宫室'], 'Xây dựng nhà lớn', 'nha'], [['修宮室', '修宫室'], 'Sửa nhà', 'nha'], [['繕城郭'], 'Tu sửa thành quách', 'nha'],
     [['興造動土'], 'Khởi công, động thổ', 'nha'], [['豎柱上梁'], 'Dựng cột, lên đòn nóc', 'nha'], [['修倉庫'], 'Sửa kho', 'nha'],
     [['開倉庫出貨財'], 'Mở kho, xuất của', 'nha'], [['修置產室'], 'Sửa hoặc đặt buồng sinh', 'nha'], [['開渠穿井'], 'Đào mương, đào giếng', 'nha'],
-    [['安碓磑'], 'Đặt cối giã, cối xay', 'nha'], [['補垣塞穴'], 'Vá tường, lấp lỗ', 'nha'], [['修飾垣墻'], 'Sửa sang tường rào', 'nha'],
+    [['安碓磑'], 'Đặt cối giã, cối xay', 'nha'], [['補垣塞穴', '補垣'], 'Vá tường, lấp lỗ', 'nha'], [['修飾垣墻'], 'Sửa sang tường rào', 'nha'],
     [['平治道塗'], 'San đường, sửa lối đi', 'nha'], [['破屋壞垣'], 'Phá nhà, tháo tường', 'nha'], [['築隄防'], 'Đắp đê, đắp bờ', 'nha'],
     [['掃舍宇'], 'Quét dọn nhà cửa', 'nha'], [['安牀'], 'Kê giường', 'nha'], [['般移'], 'Dọn nhà, chuyển chỗ ở', 'nha'], [['進人口'], 'Nhận người vào nhà', 'nha'],
     [['開市'], 'Khai trương', 'kd'], [['立劵交易'], 'Lập khế ước, giao dịch', 'kd'], [['納財'], 'Thu nhận tiền của', 'kd'],
@@ -77,7 +77,7 @@
         '青龍明堂金匱寶光玉堂司命 與吉神併則從所宜與凶神併則從所忌 ... 六黃道以位置得宜為吉 ... 今選時之法謂諸事皆宜而無專宜之事六黑道亦無專忌之事當以時例為斷',
         '其上吉足勝凶從宜不從忌 ... 最下凶叠大凶遇德仍諸事皆忌 (phép chia sáu bậc, phần 按 của mục 平日)'
       ],
-      note: 'Sách chấm ngày theo cân bằng giữa sao tốt và sao xấu, chia sáu bậc; không dùng quy tắc "gặp sao xấu là kỵ hết" của lịch cũ. Danh sách ở đây là danh sách gốc của Trực, chưa áp dụng lớp ngoại lệ theo tháng và sao đức.'
+      note: 'Sách chấm ngày theo cân bằng giữa sao tốt và sao xấu, chia sáu bậc; không dùng quy tắc "gặp sao xấu là kỵ hết" của lịch cũ. App áp lớp ngoại lệ theo tháng và sao đức cho sáu Trực có điều kiện trong sách (Kiến, Mãn, Bình, Phá, Thu, Bế); chỗ sách bảo tính theo sao khác (Nguyệt Hình, Nguyệt Yếm, Nguyệt Sát, Kiếp Sát, Tai Sát) thì app chưa kết luận và nói rõ.'
     }
   };
 

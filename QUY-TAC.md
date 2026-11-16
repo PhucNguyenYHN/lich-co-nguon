@@ -158,3 +158,16 @@ Web app một file, chạy **offline trong Safari** (macOS và iPhone), không c
 - Hoàng/Hắc đạo: hai quan điểm trong sách (lịch thư: Hoàng đạo "tránh được mọi hung", Hắc đạo kỵ xây cất, cưới gả, đi xa; Hiệp kỷ: không có việc riêng, xét theo thời và sao khác). App hiện cả hai.
 
 **Bát tự** (`bat-tu.js`): tứ trụ theo Lập xuân, ngũ hành, nạp âm, thập thần của can năm, tháng, giờ so với nhật chủ. Hành của nạp âm khớp công thức Hiệp kỷ q.1 và công thức quen dùng cho cả 60 trụ (kiểm bằng code). Tên 30 nạp âm chưa đối chiếu văn bản. **Chưa tính** tàng can (có dị bản), đại vận, dụng thần.
+
+## Cập nhật: lớp ngoại lệ của việc nên/tránh (ngoai-le.js)
+
+Nguồn: Hiệp kỷ q.10 (điều kiện sau Trực Kiến, Mãn, Bình, Phá, Thu, Bế) và q.5 (bảng sao đức). Bậc B, bản số hóa chưa hiệu đính với bản quét.
+
+- Sao đức nhận ra theo tháng tiết và can chi ngày: Thiên Đức, Nguyệt Đức, Thiên Đức hợp, Nguyệt Đức hợp, Thiên Xá, Thiên Nguyện (bảng Hiệp kỷ đã chỉnh, khác bảng lịch cũ), Nguyệt Ân, Tứ Tướng, Thời Đức. Ngày giao tiết thì tính theo cả hai tháng như phần Trực.
+- Thiên Đức ở tháng Mão, Ngọ, Dậu, Tý: sách ghi tên quẻ (坤, 乾, 艮, 巽); đổi sang chi (Thân, Hợi, Dần, Tỵ) là cách đọc thông dụng, sách q.5 dòng này không tự ghi chi.
+- Chỗ sách bảo "tính theo sao khác" (Nguyệt Hình, Nguyệt Yếm, Nguyệt Sát, Kiếp Sát, Tai Sát) app không tự suy: hiện danh sách gốc kèm lời "chưa kết luận". Các sao đó chưa có bảng trong app.
+- Sách chia sáu bậc cân bằng cát/hung nhưng không gắn số bậc cho từng trường hợp, nên app không gán số bậc; app chỉ hiện kết quả ghi trong biểu lệ (đổi danh sách, không chú nên/kỵ, mọi việc đều kỵ).
+- Các chỗ cách đọc chữ không chắc, app ghi rõ trên giao diện: câu "月德天德合月德合" của ngày Mãn (có thể có hoặc không có Thiên Đức), câu "天德月德合" của ngày Bình tháng Thân (app lấy hợp của bốn sao đức), "等事" của ngày Phá (app thêm ba việc sách nêu cụ thể: giải trừ, chữa bệnh, phá nhà).
+- Chưa tính: Hoàng/Hắc đạo, các sao khác ngoài 12 Trực, 28 sao. Trực Trừ, Định, Chấp, Nguy, Thành, Khai: q.10 không ghi điều kiện theo tháng.
+- Một mâu thuẫn trong sách chưa giải quyết: phần 按 của ngày Mãn nhắc "子午月值月厭" nhưng phần chính văn chỉ ghi "己亥月值月厭"; app theo chính văn.
+- Kiểm thử: `node test-ngoai-le.js`.

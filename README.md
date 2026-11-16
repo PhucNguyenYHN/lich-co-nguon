@@ -6,4 +6,4 @@ Lịch âm, ngày giờ tốt xấu, hướng nhà theo Bát trạch, tuổi là
 
 - Chạy hoàn toàn trong trình duyệt, không gửi dữ liệu đi đâu. Mở `index.html` là dùng được.
 - Quy tắc và chỗ còn trống: `QUY-TAC.md`. Nguồn đã thu thập: thư mục `nguon/`.
-- Kiểm thử: `node test-core.js`, `node test-rules-b.js`, `node test-bat-trach.js`, `node test-tuoi-nha.js`, `node test-bat-tu-viec.js`.
+- Kiểm thử: `node test-core.js`, `node test-rules-b.js`, `node test-bat-trach.js`, `node test-tuoi-nha.js`, `node test-bat-tu-viec.js`, `node test-ngoai-le.js`.

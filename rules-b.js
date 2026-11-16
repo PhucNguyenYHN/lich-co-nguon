@@ -199,7 +199,7 @@
     for (var i = 0; i < mo.options.length; i++) {
       var o = mo.options[i];
       var tr = trucOf(dayB, o.branch);
-      truc.push({ rule: o.rule, thang: CHI[o.branch], truc: tr });
+      truc.push({ rule: o.rule, thang: CHI[o.branch], thangChi: o.branch, truc: tr });
       hoang.push({ rule: o.rule, thang: CHI[o.branch], than: thanOf(dayB, o.branch) });
       nguyetPha.push({ rule: o.rule, thang: CHI[o.branch], phaThang: mod(dayB - o.branch, 12) === 6 });
     }

@@ -1,7 +1,7 @@
 /* app.js — giao diện. Viết kiểu ES5 để chạy được trên Safari cũ. Không gửi dữ liệu đi đâu, mọi tính toán tại máy. */
 (function () {
   'use strict';
-  var LC = window.LichCore, RB = window.RulesB, BT = window.BatTrach, TN = window.TuoiNha, BU = window.BatTu, VI = window.Viec;
+  var LC = window.LichCore, RB = window.RulesB, BT = window.BatTrach, TN = window.TuoiNha, BU = window.BatTu, VI = window.Viec, NL = window.NgoaiLe;
   var EL = { 'Kim': 'Kim', 'Mộc': 'Moc', 'Thủy': 'Thuy', 'Hỏa': 'Hoa', 'Thổ': 'Tho' };
 
   var DIRS = ['', 'Bắc', 'Đông Bắc', 'Đông', 'Đông Nam', 'Nam', 'Tây Nam', 'Tây', 'Tây Bắc'];
@@ -145,19 +145,34 @@
     if (q.length) out += '<details><summary>' + esc(VI.NHOM.quan) + ': ' + q.length + ' việc</summary><div class="vgroup">' + chips(q, cls) + '</div></details>';
     return out;
   }
-  function viecCard(r) {
+  function viecCard(r, a) {
     var body = '<p class="sub">' + esc(VI.SOURCES.HK10.note) + '</p>';
     for (var i = 0; i < r.truc.length; i++) {
       var o = r.truc[i], v = VI.theoTruc(o.truc.index);
-      var inner = '<p><b>Trực ' + esc(v.truc) + '</b></p>' +
-        '<p class="vh">Nên làm ' + tag('cát') + '</p>' + viecLists(v.nen, 'v-nen') +
-        '<p class="vh">Nên tránh ' + tag('hung') + '</p>' + (v.tranh.length ? viecLists(v.tranh, 'v-tranh') : '<p class="sub">' + esc(v.ghiChu || 'Hiệp kỷ không ghi việc kỵ riêng.') + '</p>');
-      if (v.khongKy.length) inner += '<p class="vh">Sách ghi rõ chỉ không kỵ' + '</p>' + viecLists(v.khongKy, 'v-neu');
-      if (v.coNgoaiLe) {
-        inner += '<p class="note">Trực này có điều kiện ngoại lệ trong sách (theo tháng và các sao đức). <b>App chưa tự áp dụng</b>, nên ngày cụ thể có thể nới hoặc nặng hơn danh sách trên.</p>' +
-          '<details><summary>Điều kiện ngoại lệ, nguyên văn Hiệp kỷ q.10</summary><p class="han">' + esc(v.dieuKien.join('\n')).replace(/\n/g, '<br>') + '</p>' +
-          (v.an.length ? '<p class="han q">' + esc(v.an.join('\n')).replace(/\n/g, '<br>') + '</p>' : '') + '</details>';
+      var x = NL.theoNgay(o.truc.index, o.thangChi, a.dayPillar.stem, a.dayPillar.branch);
+      var st = x.trangThai;
+      var badge = { 'goc': 'Danh sách gốc', 'doi': 'Đã đổi theo ngoại lệ', 'trung-tinh': 'Không khuyên, không kỵ', 'tat-ca-ky': 'Mọi việc đều kỵ', 'tham-chieu': 'Chưa kết luận: sách bảo tính theo sao khác' }[st];
+      var inner = '<p><b>Trực ' + esc(v.truc) + '</b> ' + (st === 'tat-ca-ky' ? tag('hung') : (st === 'doi' ? tag('đã đổi') : (st === 'trung-tinh' ? tag('trung tính') : ''))) +
+        ' <span class="sub">' + esc(badge || '') + '</span></p>';
+      if (x.ducs.length) {
+        var dn = [];
+        for (var q = 0; q < x.ducs.length; q++) dn.push(esc(x.ducs[q].vi) + ' <span class="han">' + x.ducs[q].han + '</span>');
+        inner += '<p class="sub">Sao đức trùng ngày (theo tháng ' + esc(o.thang) + '): ' + dn.join(', ') + '</p>';
+      } else inner += '<p class="sub">Không có sao đức nào trùng ngày này (theo tháng ' + esc(o.thang) + ').</p>';
+      if (x.giaiThich) inner += '<p class="note">' + esc(x.giaiThich) + '</p>';
+      if (x.thamChieu.length) inner += '<p class="note">Sách bảo tính theo ' + esc(x.thamChieu.join(', ')) + '. App chưa có bảng đó, nên <b>danh sách dưới đây là danh sách gốc, chưa phải kết luận</b>; ngày thật có thể nặng hơn.</p>';
+      if (x.moHo) inner += '<p class="note">' + esc(x.moHo) + '</p>';
+      if (st === 'tat-ca-ky') inner += '<p class="vh">Nên làm ' + tag('cát') + '</p><p class="sub">Không có.</p><p class="vh">Nên tránh ' + tag('hung') + '</p><p><span class="v v-tranh">Mọi việc <span class="han">諸事皆忌</span></span></p>';
+      else if (st === 'trung-tinh') inner += '<p class="sub">Sách ghi "不註宜, 不註忌": việc nên và việc kỵ đều không chú. Việc cụ thể phải xét theo sao khác.</p>';
+      else {
+        inner += '<p class="vh">Nên làm ' + tag('cát') + '</p>' + viecLists(x.nen, 'v-nen') +
+          '<p class="vh">Nên tránh ' + tag('hung') + '</p>' + (x.tranh.length ? viecLists(x.tranh, 'v-tranh') : '<p class="sub">' + esc(st === 'doi' ? 'Theo ngoại lệ, không còn việc nào kỵ.' : (v.ghiChu || 'Hiệp kỷ không ghi việc kỵ riêng.')) + '</p>');
+        if (x.khongKy.length) inner += '<p class="vh">Sách ghi rõ chỉ không kỵ' + '</p>' + viecLists(x.khongKy, 'v-neu');
       }
+      if (v.coNgoaiLe) {
+        inner += '<details><summary>Điều kiện ngoại lệ, nguyên văn Hiệp kỷ q.10</summary><p class="han">' + esc(v.dieuKien.join('\n')).replace(/\n/g, '<br>') + '</p>' +
+          (v.an.length ? '<p class="han q">' + esc(v.an.join('\n')).replace(/\n/g, '<br>') + '</p>' : '') + '</details>';
+      } else inner += '<p class="sub">Trực này Hiệp kỷ q.10 không ghi điều kiện ngoại lệ theo tháng.</p>';
       if (v.yiThem.length || v.jiThem.length) {
         inner += '<details><summary>Điều kiện kèm theo (sao trùng ngày, tháng riêng), nguyên văn</summary><p class="han">' +
           esc(v.yiThem.concat(v.jiThem).join('\n')).replace(/\n/g, '<br>') + '</p></details>';
@@ -243,7 +258,7 @@
     if (npha) tr += '<p>Chi ngày xung chi tháng (Nguyệt phá) ' + tag('hung') + ' <span class="sub">suy từ địa chi, chưa trích sách.</span></p>';
     tr += '<p class="sub">Phân loại cát/hung theo phần 考原曰 của Hiệp kỷ. Các trang lịch phổ thông có thể xếp khác.</p>';
     html += card('12 Trực', 'B', tr);
-    html += viecCard(r);
+    html += viecCard(r, a);
 
     // 4. Hoàng đạo / Hắc đạo
     var hd = '';
