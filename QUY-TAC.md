@@ -146,3 +146,15 @@ Còn một quyết định thuộc về bạn: Huyền không phi tinh làm luô
 ## Kiểu app
 
 Web app một file, chạy **offline trong Safari** (macOS và iPhone), không cần máy chủ. Thêm vào Dock/Màn hình chính để dùng như app. Tránh cú pháp quá mới để chạy được trên Safari của MacBook 2015.
+
+---
+
+## Cập nhật: việc nên/tránh và Bát tự (2026-11-16)
+
+**Việc nên làm, nên tránh theo 12 Trực** (`viec.js`, `viec-data.js`): chữ Hán lấy **tự động** từ văn bản thô Hiệp kỷ q.10 theo số dòng, không gõ tay; chỉ phần tách từng việc và dịch tiếng Việt là của người làm app (chưa ai hiệu đính).
+- Đây là danh sách **gốc** của từng Trực. Hiệp kỷ có lớp ngoại lệ theo **tháng** và các **sao** mà ngày trùng với (Thiên đức, Nguyệt đức, Thiên xá, Tam sát tháng, Nguyệt hình, Nguyệt hại, Nguyệt yếm, Đại thời, Thiên lại...), chia **sáu bậc** cân bằng sao tốt và sao xấu. Lớp này **chưa tính tự động**; app trả kèm nguyên văn điều kiện cho sáu Trực có ghi (Kiến, Mãn, Bình, Phá, Thu, Bế).
+- Cần thêm để tính được: bảng Thiên đức/Nguyệt đức/hợp, Thiên xá, Thiên nguyện, Nguyệt ân, Tứ tướng, Thời đức, và các sao tháng. Bảng Thiên nguyện trong sách khác nhiều với bản lưu hành (sách chính nó nói bản cũ sai), nên **không dùng trí nhớ**.
+- Điểm đáng chú ý: Hiệp kỷ **không ghi việc kỵ riêng** cho Trừ, Định, Chấp, Nguy, Thành, nhưng các lịch phổ thông thường xếp một số ngày này là xấu. Hiệp kỷ cũng phê quy tắc "gặp sao xấu là kỵ hết" của lịch cũ.
+- Hoàng/Hắc đạo: hai quan điểm trong sách (lịch thư: Hoàng đạo "tránh được mọi hung", Hắc đạo kỵ xây cất, cưới gả, đi xa; Hiệp kỷ: không có việc riêng, xét theo thời và sao khác). App hiện cả hai.
+
+**Bát tự** (`bat-tu.js`): tứ trụ theo Lập xuân, ngũ hành, nạp âm, thập thần của can năm, tháng, giờ so với nhật chủ. Hành của nạp âm khớp công thức Hiệp kỷ q.1 và công thức quen dùng cho cả 60 trụ (kiểm bằng code). Tên 30 nạp âm chưa đối chiếu văn bản. **Chưa tính** tàng can (có dị bản), đại vận, dụng thần.

@@ -119,3 +119,58 @@ code { font-size: 90%; }
   th, td { padding: 4px 5px; }
   input[type="number"] { width: 72px; }
 }
+
+/* ===== Màu theo ngũ hành (chỉ là gợi ý thêm; tên hành luôn có chữ) ===== */
+:root {
+  --el-kim: #6f5f12;  --el-kim-bg: #f3edcf;
+  --el-moc: #276b32;  --el-moc-bg: #dff0e2;
+  --el-thuy: #1d5a94; --el-thuy-bg: #dce9f6;
+  --el-hoa: #a8301f;  --el-hoa-bg: #f8e0db;
+  --el-tho: #7d4f22;  --el-tho-bg: #f1e4d2;
+  --s-kim: #c9b458; --s-moc: #4f9d5d; --s-thuy: #3a7fc0; --s-hoa: #c8503f; --s-tho: #a9794a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --el-kim: #ecd98a;  --el-kim-bg: #3a3414;
+    --el-moc: #86d594;  --el-moc-bg: #1b3322;
+    --el-thuy: #86bdea; --el-thuy-bg: #1a2c40;
+    --el-hoa: #f2a396;  --el-hoa-bg: #402320;
+    --el-tho: #deb07a;  --el-tho-bg: #3a2a18;
+  }
+}
+:root[data-theme="dark"] {
+  --el-kim: #ecd98a;  --el-kim-bg: #3a3414;
+  --el-moc: #86d594;  --el-moc-bg: #1b3322;
+  --el-thuy: #86bdea; --el-thuy-bg: #1a2c40;
+  --el-hoa: #f2a396;  --el-hoa-bg: #402320;
+  --el-tho: #deb07a;  --el-tho-bg: #3a2a18;
+}
+
+.stripe { display: flex; height: 5px; }
+.stripe i { flex: 1; display: block; }
+.s-kim { background: var(--s-kim); } .s-moc { background: var(--s-moc); } .s-thuy { background: var(--s-thuy); }
+.s-hoa { background: var(--s-hoa); } .s-tho { background: var(--s-tho); }
+
+.el { display: inline-block; padding: 0 8px; border-radius: 6px; font-weight: 600; line-height: 1.6; border: 1px solid currentColor; margin-right: 3px; }
+.el-Kim { color: var(--el-kim); background: var(--el-kim-bg); }
+.el-Moc { color: var(--el-moc); background: var(--el-moc-bg); }
+.el-Thuy { color: var(--el-thuy); background: var(--el-thuy-bg); }
+.el-Hoa { color: var(--el-hoa); background: var(--el-hoa-bg); }
+.el-Tho { color: var(--el-tho); background: var(--el-tho-bg); }
+.pill { white-space: nowrap; }
+
+.card-A { border-top: 3px solid var(--a); }
+.card-B { border-top: 3px solid var(--b); }
+.card-C { border-top: 3px solid var(--c); }
+.tabs button[aria-selected="true"] { box-shadow: inset 0 3px 0 var(--accent); }
+h1 { color: var(--accent); }
+
+.v { display: inline-block; margin: 2px 4px 2px 0; padding: 1px 9px; border-radius: 12px; font-size: 14px; border: 1px solid currentColor; }
+.v-nen { color: var(--ok); background: var(--ok-soft); }
+.v-tranh { color: var(--bad); background: var(--bad-soft); }
+.v-neu { color: var(--muted); }
+.v .han { font-size: 12px; opacity: .75; }
+.vgroup { margin: 4px 0 8px; }
+.vtitle { font-size: 13px; font-weight: 600; color: var(--muted); margin-right: 4px; }
+.vh { margin: 10px 0 2px; font-weight: 600; }
+.note { margin: 8px 0; padding: 8px 10px; border-radius: 8px; background: var(--warn-bg); color: var(--warn-ink); font-size: 14px; }

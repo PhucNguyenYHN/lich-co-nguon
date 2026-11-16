@@ -1,7 +1,8 @@
 /* app.js — giao diện. Viết kiểu ES5 để chạy được trên Safari cũ. Không gửi dữ liệu đi đâu, mọi tính toán tại máy. */
 (function () {
   'use strict';
-  var LC = window.LichCore, RB = window.RulesB, BT = window.BatTrach, TN = window.TuoiNha;
+  var LC = window.LichCore, RB = window.RulesB, BT = window.BatTrach, TN = window.TuoiNha, BU = window.BatTu, VI = window.Viec;
+  var EL = { 'Kim': 'Kim', 'Mộc': 'Moc', 'Thủy': 'Thuy', 'Hỏa': 'Hoa', 'Thổ': 'Tho' };
 
   var DIRS = ['', 'Bắc', 'Đông Bắc', 'Đông', 'Đông Nam', 'Nam', 'Tây Nam', 'Tây', 'Tây Bắc'];
   var WEEK = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
@@ -42,7 +43,15 @@
     return '<span class="tag ' + cls + '">' + esc(loai) + '</span>';
   }
   function card(title, bacs, body) {
-    return '<div class="card"><h3>' + esc(title) + (bacs ? ' ' + bac(bacs) : '') + '</h3>' + body + '</div>';
+    var cls = bacs ? ' card-' + String(bacs).charAt(0) : '';
+    return '<div class="card' + cls + '"><h3>' + esc(title) + (bacs ? ' ' + bac(bacs) : '') + '</h3>' + body + '</div>';
+  }
+  // Chip màu theo ngũ hành. Màu chỉ là gợi ý thêm: tên hành luôn có trong thuộc tính title và trong bảng.
+  function elChip(text, hanh) {
+    return '<span class="el el-' + EL[hanh] + '" title="' + esc(hanh) + '">' + esc(text) + '</span>';
+  }
+  function pill(p) {
+    return '<span class="pill">' + elChip(BU.CAN[p.stem], BU.STEM_EL[p.stem]) + elChip(BU.CHI[p.branch], BU.BRANCH_EL[p.branch]) + '</span>';
   }
   function errCard(msg) { return '<div class="card err" role="alert">' + esc(msg) + '</div>'; }
 
@@ -86,6 +95,83 @@
     s.innerHTML = h;
   }
 
+  // ---------- Bát tự ----------
+  function batTuCard(a, hasHour) {
+    var bt = BU.baTu(a, hasHour), html = '';
+    html += '<p>Nhật chủ (can ngày): ' + elChip(bt.nhatChu.can, bt.nhatChu.hanh) + ' <span class="sub">' + esc(bt.nhatChu.hanh + ' ' + bt.nhatChu.amDuong) + '</span></p>';
+    for (var b = 0; b < bt.bien.length; b++) {
+      var v = bt.bien[b];
+      if (v.ghiChu) html += '<p class="sub">' + esc(v.ghiChu) + '</p>';
+      var order = [];                       // hiện theo thứ tự truyền thống: Giờ, Ngày, Tháng, Năm
+      for (var i = v.tru.length - 1; i >= 0; i--) order.push(v.tru[i]);
+      var th = '<tr><th></th>', r1 = '<tr><th>Thập thần</th>', r2 = '<tr><th>Can</th>', r3 = '<tr><th>Chi</th>', r4 = '<tr><th>Nạp âm</th>';
+      for (var j = 0; j < order.length; j++) {
+        var t = order[j];
+        th += '<th>' + esc(t.ten) + '</th>';
+        r1 += '<td>' + esc(t.thapThan) + '</td>';
+        r2 += '<td>' + elChip(t.can, t.hanhCan) + ' <span class="sub">' + esc(t.hanhCan + ' ' + t.amDuongCan) + '</span></td>';
+        r3 += '<td>' + elChip(t.chi, t.hanhChi) + ' <span class="sub">' + esc(t.hanhChi) + '</span></td>';
+        r4 += '<td>' + elChip(t.napAm, t.napAmHanh) + '</td>';
+      }
+      html += '<div class="scroll"><table><thead>' + th + '</tr></thead><tbody>' + r1 + '</tr>' + r2 + '</tr>' + r3 + '</tr>' + r4 + '</tr></tbody></table></div>';
+      var cnt = '';
+      var names = ['Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ'];
+      for (var n = 0; n < names.length; n++) cnt += elChip(names[n] + ' ' + v.demHanh[names[n]], names[n]) + ' ';
+      html += '<p>Ngũ hành trong ' + v.soChu + ' chữ: ' + cnt + '</p>';
+    }
+    if (!hasHour) html += '<p class="sub">Chưa nhập giờ nên mới có 6 chữ. Nhập giờ để đủ 8 chữ (tứ trụ).</p>';
+    html += '<p class="sub">' + esc(bt.ghiChu) + ' Thập thần tính cho can năm, tháng, giờ so với nhật chủ.</p>';
+    return card('Bát tự (tứ trụ)', 'A / B', html);
+  }
+
+  // ---------- Việc nên làm / nên tránh ----------
+  function chips(items, cls) {
+    var h = '';
+    for (var i = 0; i < items.length; i++) {
+      h += '<span class="v ' + cls + '">' + esc(items[i].vi) + ' <span class="han">' + esc(items[i].han) + '</span></span> ';
+    }
+    return h;
+  }
+  function viecLists(items, cls) {
+    if (!items.length) return '<p class="sub">Không có.</p>';
+    var order = ['te', 'cuoi', 'nha', 'kd', 'sk', 'hoc', 'nong', 'tang', 'xh'], out = '', i, k;
+    for (i = 0; i < order.length; i++) {
+      var g = [];
+      for (k = 0; k < items.length; k++) if (items[k].nhom === order[i]) g.push(items[k]);
+      if (g.length) out += '<div class="vgroup"><span class="vtitle">' + esc(VI.NHOM[order[i]]) + '</span> ' + chips(g, cls) + '</div>';
+    }
+    var q = [];
+    for (k = 0; k < items.length; k++) if (items[k].nhom === 'quan') q.push(items[k]);
+    if (q.length) out += '<details><summary>' + esc(VI.NHOM.quan) + ': ' + q.length + ' việc</summary><div class="vgroup">' + chips(q, cls) + '</div></details>';
+    return out;
+  }
+  function viecCard(r) {
+    var body = '<p class="sub">' + esc(VI.SOURCES.HK10.note) + '</p>';
+    for (var i = 0; i < r.truc.length; i++) {
+      var o = r.truc[i], v = VI.theoTruc(o.truc.index);
+      var inner = '<p><b>Trực ' + esc(v.truc) + '</b></p>' +
+        '<p class="vh">Nên làm ' + tag('cát') + '</p>' + viecLists(v.nen, 'v-nen') +
+        '<p class="vh">Nên tránh ' + tag('hung') + '</p>' + (v.tranh.length ? viecLists(v.tranh, 'v-tranh') : '<p class="sub">' + esc(v.ghiChu || 'Hiệp kỷ không ghi việc kỵ riêng.') + '</p>');
+      if (v.khongKy.length) inner += '<p class="vh">Sách ghi rõ chỉ không kỵ' + '</p>' + viecLists(v.khongKy, 'v-neu');
+      if (v.coNgoaiLe) {
+        inner += '<p class="note">Trực này có điều kiện ngoại lệ trong sách (theo tháng và các sao đức). <b>App chưa tự áp dụng</b>, nên ngày cụ thể có thể nới hoặc nặng hơn danh sách trên.</p>' +
+          '<details><summary>Điều kiện ngoại lệ, nguyên văn Hiệp kỷ q.10</summary><p class="han">' + esc(v.dieuKien.join('\n')).replace(/\n/g, '<br>') + '</p>' +
+          (v.an.length ? '<p class="han q">' + esc(v.an.join('\n')).replace(/\n/g, '<br>') + '</p>' : '') + '</details>';
+      }
+      if (v.yiThem.length || v.jiThem.length) {
+        inner += '<details><summary>Điều kiện kèm theo (sao trùng ngày, tháng riêng), nguyên văn</summary><p class="han">' +
+          esc(v.yiThem.concat(v.jiThem).join('\n')).replace(/\n/g, '<br>') + '</p></details>';
+      }
+      body += opt(o.rule, inner);
+    }
+    var hd = r.hoangDao[0].than;
+    body += '<details><summary>Hoàng đạo / Hắc đạo ảnh hưởng thế nào? Ngày này: ' + esc(hd.vi) + ' (' + esc(hd.loai) + ')</summary>' +
+      '<p>' + esc(VI.HOANG_HAC.hiepKy) + '</p><p>' + esc(VI.HOANG_HAC.lichThu) + '</p>' +
+      '<p class="sub">Hai quan điểm này khác nhau. App không chọn; ngoại lệ Hoàng/Hắc đạo chưa được tính vào danh sách trên.</p></details>';
+    body += '<p class="sub">Đây chỉ là các việc ghi cho 12 Trực. Hiệp kỷ còn hàng chục sao khác, mỗi sao có điều nên và kỵ riêng, chưa có trong app. Bản dịch tên việc là cách hiểu của người làm app.</p>';
+    return card('Việc nên làm, việc nên tránh (theo Trực)', 'B', body);
+  }
+
   // ---------- Tab 1: Xem ngày ----------
   function renderDay() {
     var out = $('out-day');
@@ -106,7 +192,7 @@
     var lu = a.lunar;
     var body = '<p><b>' + WEEK[(jdn + 1) % 7] + ', ' + d + '/' + m + '/' + y + '</b></p>' +
       '<p>Âm lịch (múi giờ UTC+7): <b>ngày ' + lu.day + ' tháng ' + lu.month + (lu.leap ? ' nhuận' : '') + ' năm ' + lu.year + '</b></p>' +
-      '<p>Can chi ngày: <b>' + esc(a.dayPillar.name) + '</b></p>';
+      '<p>Can chi ngày: ' + pill(a.dayPillar) + ' <span class="sub">' + esc(a.dayPillar.name) + '</span></p>';
     if (a.tietToday.length) {
       var t = a.tietToday[0];
       body += '<p>Ngày có giao tiết <b>' + esc(t.name) + '</b> lúc ' + pad2(t.local.hour) + ':' + pad2(t.local.minute) + '. Sai số tính tiết vài phút.</p>';
@@ -117,24 +203,24 @@
     var yp = a.yearPillar, tb = '<div class="scroll"><table><tbody>';
     if (yp.differ) {
       var lx = LC.jdToLocal(LC.lapXuanJD(y), 7);
-      tb += '<tr><th>Năm</th><td>Theo Lập xuân: <b>' + esc(yp.byLapXuan.name) + '</b><br>Theo mùng 1 Tết: <b>' + esc(yp.byTet.name) +
-        '</b><div class="sub">Ngày này nằm giữa hai mốc nên hai cách cho kết quả khác nhau. Lập xuân năm ' + y + ' lúc ' +
+      tb += '<tr><th>Năm</th><td>Theo Lập xuân: ' + pill(yp.byLapXuan) + ' ' + esc(yp.byLapXuan.name) + '<br>Theo mùng 1 Tết: ' + pill(yp.byTet) + ' ' + esc(yp.byTet.name) +
+        '<div class="sub">Ngày này nằm giữa hai mốc nên hai cách cho kết quả khác nhau. Lập xuân năm ' + y + ' lúc ' +
         pad2(lx.hour) + ':' + pad2(lx.minute) + ' ngày ' + lx.day + '/' + lx.month + '.</div></td></tr>';
     } else {
-      tb += '<tr><th>Năm</th><td><b>' + esc(yp.byLapXuan.name) + '</b> <span class="sub">(hai mốc Lập xuân và Tết trùng nhau)</span></td></tr>';
+      tb += '<tr><th>Năm</th><td>' + pill(yp.byLapXuan) + ' ' + esc(yp.byLapXuan.name) + ' <span class="sub">(hai mốc Lập xuân và Tết trùng nhau)</span></td></tr>';
     }
     if (a.tietToday.length) {
       var ab = LC.analyze(d, m, y, 0, 0), aa = LC.analyze(d, m, y, 23, 59);
-      tb += '<tr><th>Tháng</th><td>Trước giao tiết: <b>' + esc(ab.monthPillar.name) + '</b><br>Sau giao tiết: <b>' + esc(aa.monthPillar.name) +
-        '</b><div class="sub">Can chi tháng đổi ở thời điểm giao tiết, không phải mùng 1 âm lịch.</div></td></tr>';
+      tb += '<tr><th>Tháng</th><td>Trước giao tiết: ' + pill(ab.monthPillar) + ' ' + esc(ab.monthPillar.name) + '<br>Sau giao tiết: ' + pill(aa.monthPillar) + ' ' + esc(aa.monthPillar.name) +
+        '<div class="sub">Can chi tháng đổi ở thời điểm giao tiết, không phải mùng 1 âm lịch.</div></td></tr>';
     } else {
-      tb += '<tr><th>Tháng</th><td><b>' + esc(a.monthPillar.name) + '</b> <span class="sub">(tính theo Tiết)</span></td></tr>';
+      tb += '<tr><th>Tháng</th><td>' + pill(a.monthPillar) + ' ' + esc(a.monthPillar.name) + ' <span class="sub">(tính theo Tiết)</span></td></tr>';
     }
     if (hasHour) {
       var hh = '';
       for (var i = 0; i < a.hourPillars.length; i++) {
         var hp = a.hourPillars[i];
-        hh += '<div><b>' + esc(hp.pillar.name) + '</b>' + (hp.rule ? ' <span class="sub">(' + esc(hp.rule) + ')</span>' : '') + '</div>';
+        hh += '<div>' + pill(hp.pillar) + ' ' + esc(hp.pillar.name) + (hp.rule ? ' <span class="sub">(' + esc(hp.rule) + ')</span>' : '') + '</div>';
       }
       tb += '<tr><th>Giờ</th><td>' + hh + (a.hourPillars.length > 1 ? '<div class="sub">Giờ Tý muộn (23h) có hai cách tính; app hiện cả hai.</div>' : '') + '</td></tr>';
     } else {
@@ -142,6 +228,7 @@
     }
     tb += '</tbody></table></div>';
     html += card('Can chi', 'A', tb);
+    html += batTuCard(a, hasHour);
 
     // 3. Trực
     var tr = '';
@@ -156,6 +243,7 @@
     if (npha) tr += '<p>Chi ngày xung chi tháng (Nguyệt phá) ' + tag('hung') + ' <span class="sub">suy từ địa chi, chưa trích sách.</span></p>';
     tr += '<p class="sub">Phân loại cát/hung theo phần 考原曰 của Hiệp kỷ. Các trang lịch phổ thông có thể xếp khác.</p>';
     html += card('12 Trực', 'B', tr);
+    html += viecCard(r);
 
     // 4. Hoàng đạo / Hắc đạo
     var hd = '';
@@ -202,7 +290,7 @@
     html += card('Phương vị theo năm (Thái tuế, Tam sát)', 'B', pv);
 
     // Nguồn
-    html += '<div class="card">' + sourceBlock(pick(RB.SOURCES, flat(r.sources).concat(['DIACHI']))) + '</div>';
+    html += '<div class="card">' + sourceBlock(pick(RB.SOURCES, flat(r.sources).concat(['DIACHI'])).concat(pick(VI.SOURCES, ['HK10'])).concat(pick(BU.SOURCES, ['BATU']))) + '</div>';
     out.innerHTML = html;
   }
 
