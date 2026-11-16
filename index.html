@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lịch có nguồn">
+<title>Lịch có nguồn</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <h1>Lịch và phong thủy có nguồn</h1>
+  <p class="lede">Mỗi kết luận ghi rõ bậc (A, B, C), nguồn, và mức đã kiểm chứng. Khi các phái bất đồng, app trình bày từng cách, không chọn thay bạn.</p>
+  <p class="legend">
+    <span class="bac bac-A">A</span> thiên văn, toán, kiểm chứng được
+    <span class="bac bac-B">B</span> có hệ thống lý luận và văn bản gốc
+    <span class="bac bac-C">C</span> quy ước dân gian, chưa có nguồn cổ
+  </p>
+  <p class="warn">Đây là tham khảo văn hóa. Chưa trường phái nào có bằng chứng thực nghiệm rằng chọn ngày hay hướng thì kết quả tốt hơn. Đừng để một chữ "xấu" quyết định chuyện lớn.</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Chức năng">
+  <button role="tab" id="tab-day" aria-selected="true" aria-controls="panel-day" data-tab="day">Xem ngày</button>
+  <button role="tab" id="tab-house" aria-selected="false" aria-controls="panel-house" data-tab="house">Hướng nhà và bàn</button>
+  <button role="tab" id="tab-age" aria-selected="false" aria-controls="panel-age" data-tab="age">Tuổi làm nhà</button>
+</nav>
+
+<main>
+  <!-- ===== Xem ngày ===== -->
+  <section id="panel-day" role="tabpanel" aria-labelledby="tab-day">
+    <form class="form" onsubmit="return false">
+      <fieldset>
+        <legend>Ngày dương lịch</legend>
+        <label>Ngày <input id="d-day" type="number" inputmode="numeric" min="1" max="31"></label>
+        <label>Tháng <input id="d-month" type="number" inputmode="numeric" min="1" max="12"></label>
+        <label>Năm <input id="d-year" type="number" inputmode="numeric" min="1900" max="2100"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Giờ (tùy chọn, giờ Việt Nam)</legend>
+        <label>Giờ <input id="d-hour" type="number" inputmode="numeric" min="0" max="23"></label>
+        <label>Phút <input id="d-min" type="number" inputmode="numeric" min="0" max="59"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Năm sinh của bạn (tùy chọn)</legend>
+        <label>Năm sinh <input id="d-birth" type="number" inputmode="numeric" min="1900" max="2100"></label>
+      </fieldset>
+    </form>
+    <div id="out-day" class="out" aria-live="polite"></div>
+  </section>
+
+  <!-- ===== Hướng nhà và bàn ===== -->
+  <section id="panel-house" role="tabpanel" aria-labelledby="tab-house" hidden>
+    <form class="form" onsubmit="return false">
+      <fieldset>
+        <legend>Ngày sinh (dương lịch)</legend>
+        <label>Ngày <input id="h-day" type="number" inputmode="numeric" min="1" max="31"></label>
+        <label>Tháng <input id="h-month" type="number" inputmode="numeric" min="1" max="12"></label>
+        <label>Năm <input id="h-year" type="number" inputmode="numeric" min="1900" max="2100"></label>
+        <label>Giới tính
+          <select id="h-gender"><option value="nam">Nam</option><option value="nu">Nữ</option></select>
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Ngôi nhà (tùy chọn)</legend>
+        <label>Tọa nhà (lưng nhà quay về)
+          <select id="h-toa" class="dir"></select>
+        </label>
+        <label>Hướng cửa chính (nhìn ra)
+          <select id="h-cua" class="dir"></select>
+        </label>
+      </fieldset>
+    </form>
+    <div id="out-house" class="out" aria-live="polite"></div>
+  </section>
+
+  <!-- ===== Tuổi làm nhà ===== -->
+  <section id="panel-age" role="tabpanel" aria-labelledby="tab-age" hidden>
+    <form class="form" onsubmit="return false">
+      <fieldset>
+        <legend>Ngày sinh của gia chủ (dương lịch)</legend>
+        <label>Ngày <input id="a-bday" type="number" inputmode="numeric" min="1" max="31"></label>
+        <label>Tháng <input id="a-bmonth" type="number" inputmode="numeric" min="1" max="12"></label>
+        <label>Năm <input id="a-byear" type="number" inputmode="numeric" min="1900" max="2100"></label>
+      </fieldset>
+      <fieldset>
+        <legend>Ngày dự định khởi công (dương lịch)</legend>
+        <label>Ngày <input id="a-cday" type="number" inputmode="numeric" min="1" max="31"></label>
+        <label>Tháng <input id="a-cmonth" type="number" inputmode="numeric" min="1" max="12"></label>
+        <label>Năm <input id="a-cyear" type="number" inputmode="numeric" min="1900" max="2100"></label>
+      </fieldset>
+    </form>
+    <div id="out-age" class="out" aria-live="polite"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Mọi nguồn và chỗ còn trống ghi trong thư mục <code>nguon/</code> và <code>QUY-TAC.md</code>. Phần chưa có nguồn gốc đọc trực tiếp luôn được ghi rõ trong từng thẻ.</p>
+</footer>
+
+<script src="lich-core.js"></script>
+<script src="rules-b.js"></script>
+<script src="bat-trach.js"></script>
+<script src="tuoi-nha.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
