@@ -47,6 +47,11 @@
         <label>Năm sinh <input id="d-birth" type="number" inputmode="numeric" min="1900" max="2100"></label>
       </fieldset>
     </form>
+    <div class="quick" role="group" aria-label="Chọn nhanh">
+      <button type="button" data-quick="today">Hôm nay</button>
+      <button type="button" data-quick="now">Bây giờ (ngày và giờ hiện tại)</button>
+      <button type="button" data-quick="clear-time">Bỏ giờ</button>
+    </div>
     <div id="out-day" class="out" aria-live="polite"></div>
   </section>
 
@@ -91,6 +96,9 @@
         <label>Năm <input id="a-cyear" type="number" inputmode="numeric" min="1900" max="2100"></label>
       </fieldset>
     </form>
+    <div class="quick" role="group" aria-label="Chọn nhanh">
+      <button type="button" data-quick="build-today">Khởi công hôm nay</button>
+    </div>
     <div id="out-age" class="out" aria-live="polite"></div>
   </section>
 </main>

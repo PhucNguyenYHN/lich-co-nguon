@@ -171,3 +171,10 @@ Nguồn: Hiệp kỷ q.10 (điều kiện sau Trực Kiến, Mãn, Bình, Phá, 
 - Chưa tính: Hoàng/Hắc đạo, các sao khác ngoài 12 Trực, 28 sao. Trực Trừ, Định, Chấp, Nguy, Thành, Khai: q.10 không ghi điều kiện theo tháng.
 - Một mâu thuẫn trong sách chưa giải quyết: phần 按 của ngày Mãn nhắc "子午月值月厭" nhưng phần chính văn chỉ ghi "己亥月值月厭"; app theo chính văn.
 - Kiểm thử: `node test-ngoai-le.js`.
+
+## Cập nhật: Hỷ thần, chi xung, nạp âm, giờ hoàng đạo
+
+- Hỷ thần (Hiệp kỷ q.7, đối chiếu văn bản thô): theo Can ngày. Giáp/Kỷ: Cấn (Đông Bắc), giờ Dần; Ất/Canh: Càn (Tây Bắc), giờ Tuất; Bính/Tân: Khôn (Tây Nam), giờ Thân; Đinh/Nhâm: Ly (Nam), giờ Ngọ; Mậu/Quý: Tốn (Đông Nam), giờ Thìn. Sách dặn phải xét cùng thần sát khác (ví dụ ngày phá thì không dùng). Khớp với một trang lịch phổ thông cho ngày Tân Sửu (Tây Nam).
+- Chi xung của ngày: phép địa chi (cách 6 chi). Danh sách tuổi xung theo Can của các trang phổ thông chưa có công thức có nguồn nên chưa đưa vào. Tài thần: không thấy trong Hiệp kỷ, chưa có.
+- Nạp âm hiện cho ngày, tháng, năm, giờ; tên khớp với trang lịch phổ thông ở ngày thử (Tân Sửu: Bích thượng thổ).
+- Giao diện: nút ‹ › tách riêng cho từng ô ngày/tháng/năm/giờ/phút; ngày và tháng chuyển qua mốc tháng, năm đúng lịch. Nút chọn nhanh: Hôm nay, Bây giờ, Bỏ giờ, Khởi công hôm nay.

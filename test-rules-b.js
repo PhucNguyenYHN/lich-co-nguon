@@ -88,5 +88,13 @@ eq('Mọi nguồn có trạng thái xác minh', Object.keys(R.SOURCES).every(k =
 const ev = R.evaluate(A(10, 2, 2024));
 eq('Mã nguồn đều tồn tại', [].concat.apply([], Object.keys(ev.sources).map(k => ev.sources[k])).every(id => R.SOURCES[id]), true);
 
+// Hỷ thần (q.7) và chi xung
+const HT = { 0: 'Đông Bắc', 5: 'Đông Bắc', 1: 'Tây Bắc', 6: 'Tây Bắc', 2: 'Tây Nam', 7: 'Tây Nam', 3: 'Nam', 8: 'Nam', 4: 'Đông Nam', 9: 'Đông Nam' };
+for (const k in HT) eq('hỷ thần can ' + k, R.hyThan(+k).huong, HT[k]);
+eq('Tân: Khôn, giờ Thân', [R.hyThan(7).quai, R.hyThan(7).gioChi], ['Khôn', 'Thân']);
+eq('Giáp: giờ Dần', R.hyThan(0).gioChi, 'Dần');
+eq('chi xung Sửu-Mùi, Tý-Ngọ', [R.chiXung(1), R.chiXung(7), R.chiXung(0)], [7, 1, 6]);
+
 console.log('\n' + pass + ' đạt, ' + fail + ' lỗi');
 process.exit(fail ? 1 : 0);
+

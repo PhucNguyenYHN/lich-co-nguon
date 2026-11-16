@@ -293,6 +293,13 @@
     hd += '</tbody></table></div>';
     html += card('Hoàng đạo / Hắc đạo, giờ hoàng đạo', 'B', hd);
 
+    // 4b. Hỷ thần và chi xung của ngày
+    var hy = RB.hyThan(a.dayPillar.stem), cx = RB.chiXung(a.dayPillar.branch);
+    html += card('Hỷ thần và chi xung của ngày', 'B',
+      '<p>Hỷ thần ngày này ở hướng <b>' + esc(hy.huong) + '</b> <span class="han">(' + esc(hy.quai) + ')</span>, giờ Hỷ thần là giờ <b>' + esc(hy.gioChi) + '</b> (' + esc(hy.gioKhoang) + ').</p>' +
+      '<p>Chi ngày <b>' + RB.CHI[a.dayPillar.branch] + '</b> xung với chi <b>' + RB.CHI[cx] + '</b>: người tuổi ' + RB.CHI[cx] + ' thường được xem là kỵ ngày này.</p>' +
+      '<p class="sub">Hỷ thần: Hiệp kỷ q.7 (喜神, tính theo Can ngày, suy ra bằng Ngũ hổ độn từ Bính; sách lưu ý vẫn phải xét cùng các thần sát khác, ví dụ gặp ngày phá thì không dùng). Chi xung là phép địa chi chuẩn. Các trang lịch phổ thông còn liệt kê tuổi xung theo cả Can (ví dụ Quý Mùi, Đinh Mùi, Ất Dậu, Ất Mão cho ngày Tân Sửu); công thức đó app chưa có nguồn nên chưa đưa vào. Tài thần cũng chưa có bảng nguồn nên chưa hiện.</p>');
+
     // 5. Quan hệ với tuổi
     if (by !== null && by >= 1900 && by <= 2100) {
       var bc = mod(by - 4, 12), dayB = a.dayPillar.branch;
@@ -425,12 +432,79 @@
     try { localStorage.setItem('lichnguon.tab', name); } catch (e) { /* không có bộ nhớ thì bỏ qua */ }
   }
 
+  // ---------- Nút tăng giảm to, tách riêng; nút chọn nhanh ----------
+  function fire(el) {
+    var ev;
+    try { ev = new Event('input', { bubbles: true }); } catch (e) { ev = document.createEvent('Event'); ev.initEvent('input', true, true); }
+    el.dispatchEvent(ev);
+  }
+  function setDate(prefix, dt) {
+    var ids = prefix === 'd' ? ['d-day', 'd-month', 'd-year'] : prefix === 'a' ? ['a-cday', 'a-cmonth', 'a-cyear'] : null;
+    if (!ids) return;
+    $(ids[0]).value = dt.getDate(); $(ids[1]).value = dt.getMonth() + 1; $(ids[2]).value = dt.getFullYear();
+    fire($(ids[0]));
+  }
+  // nhóm ngày/tháng/năm: id đầu là ngày, tiếp là tháng, năm
+  var DATE_GROUPS = [['d-day', 'd-month', 'd-year'], ['a-cday', 'a-cmonth', 'a-cyear'], ['a-bday', 'a-bmonth', 'a-byear'], ['h-day', 'h-month', 'h-year']];
+  function stepDate(group, which, dir) {
+    var D = $(group[0]), M = $(group[1]), Y = $(group[2]);
+    var now = new Date();
+    var d = parseInt(D.value, 10), m = parseInt(M.value, 10), y = parseInt(Y.value, 10);
+    if (isNaN(d)) d = now.getDate(); if (isNaN(m)) m = now.getMonth() + 1; if (isNaN(y)) y = now.getFullYear();
+    var dt = new Date(y, m - 1, d, 12, 0, 0);
+    if (which === 0) dt.setDate(dt.getDate() + dir);
+    else if (which === 1) { var dd = dt.getDate(); dt.setDate(1); dt.setMonth(dt.getMonth() + dir); var last = new Date(dt.getFullYear(), dt.getMonth() + 1, 0).getDate(); dt.setDate(Math.min(dd, last)); }
+    else dt.setFullYear(dt.getFullYear() + dir);
+    var ny = dt.getFullYear(); if (ny < 1900 || ny > 2100) return;
+    D.value = dt.getDate(); M.value = dt.getMonth() + 1; Y.value = ny; fire(D);
+  }
+  function stepSimple(el, dir, lo, hi, wrap) {
+    var v = parseInt(el.value, 10), now = new Date();
+    if (isNaN(v)) v = el.id === 'd-hour' ? now.getHours() : el.id === 'd-min' ? now.getMinutes() : (lo === 1900 ? 1990 : lo);
+    else v += dir;
+    if (v > hi) v = wrap ? lo : hi;
+    if (v < lo) v = wrap ? hi : lo;
+    el.value = v; fire(el);
+  }
+  function makeSteppers() {
+    var all = document.querySelectorAll('input[type=number]');
+    for (var i = 0; i < all.length; i++) (function (el) {
+      var id = el.id, grp = null, which = 0, g, k;
+      for (g = 0; g < DATE_GROUPS.length; g++) for (k = 0; k < 3; k++) if (DATE_GROUPS[g][k] === id) { grp = DATE_GROUPS[g]; which = k; }
+      var lo = +el.min || 0, hi = +el.max || 9999, wrap = (id === 'd-hour' || id === 'd-min');
+      var wrapEl = document.createElement('div'); wrapEl.className = 'stepper';
+      function btn(sym, dir, label) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'stp'; b.textContent = sym;
+        b.setAttribute('aria-label', label);
+        b.addEventListener('click', function () { if (grp) stepDate(grp, which, dir); else stepSimple(el, dir, lo, hi, wrap); });
+        return b;
+      }
+      el.parentNode.insertBefore(wrapEl, el);
+      wrapEl.appendChild(btn('‹', -1, 'Giảm'));
+      wrapEl.appendChild(el);
+      wrapEl.appendChild(btn('›', 1, 'Tăng'));
+    })(all[i]);
+  }
+  function quickButtons() {
+    var bs = document.querySelectorAll('[data-quick]');
+    for (var i = 0; i < bs.length; i++) (function (b) {
+      b.addEventListener('click', function () {
+        var q = b.getAttribute('data-quick'), now = new Date();
+        if (q === 'today') setDate('d', now);
+        else if (q === 'now') { setDate('d', now); $('d-hour').value = now.getHours(); $('d-min').value = now.getMinutes(); fire($('d-hour')); }
+        else if (q === 'clear-time') { $('d-hour').value = ''; $('d-min').value = ''; fire($('d-hour')); }
+        else if (q === 'build-today') setDate('a', now);
+      });
+    })(bs[i]);
+  }
+
   function init() {
     dirOptions('h-toa'); dirOptions('h-cua');
     var now = new Date();
     $('d-day').value = now.getDate(); $('d-month').value = now.getMonth() + 1; $('d-year').value = now.getFullYear();
     $('a-cday').value = now.getDate(); $('a-cmonth').value = now.getMonth() + 1; $('a-cyear').value = now.getFullYear();
 
+    makeSteppers(); quickButtons();
     var renders = { day: renderDay, house: renderHouse, age: renderAge };
     for (var i = 0; i < TABS.length; i++) {
       (function (name) {

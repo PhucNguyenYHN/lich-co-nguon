@@ -236,7 +236,17 @@
     };
   }
 
+  // Hỷ thần (q.7): theo Can ngày. Giáp/Kỷ: Cấn, giờ Dần; Ất/Canh: Càn, giờ Tuất; Bính/Tân: Khôn, giờ Thân; Đinh/Nhâm: Ly, giờ Ngọ; Mậu/Quý: Tốn, giờ Thìn.
+  var HY_THAN_CHI = [2, 10, 8, 6, 4]; // chi của giờ Hỷ thần: Dần Tuất Thân Ngọ Thìn
+  var HY_THAN_QUAI = ['Cấn', 'Càn', 'Khôn', 'Ly', 'Tốn'], HY_THAN_HUONG = ['Đông Bắc', 'Tây Bắc', 'Tây Nam', 'Nam', 'Đông Nam'];
+  function hyThan(dayStem) {
+    var k = mod(dayStem, 5);
+    return { quai: HY_THAN_QUAI[k], huong: HY_THAN_HUONG[k], gioChi: CHI[HY_THAN_CHI[k]], gioKhoang: hourRange(HY_THAN_CHI[k]) };
+  }
+  function chiXung(dayBranch) { return mod(dayBranch + 6, 12); }
+
   var api = {
+    hyThan: hyThan, chiXung: chiXung,
     SOURCES: SOURCES, CHI: CHI, TRUC: TRUC, THAN: THAN,
     trucOf: trucOf, thanOf: thanOf, thanhLongStart: thanhLongStart,
     gioHoangDao: gioHoangDao, relations: relations, huongNam: huongNam,
